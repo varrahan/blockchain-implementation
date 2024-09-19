@@ -1,0 +1,8 @@
+services:
+  app:
+    container_name: blockchain-container
+    image: blockchain
+    ports:
+      - "${HOST_PORT}:${CONTAINER_PORT}"
+    env_file:
+      - .env
