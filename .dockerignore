@@ -1,0 +1,43 @@
+# Binaries
+/bin/
+*/bin/
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Temporary files
+*.log
+*.tmp
+*.out
+
+# Dependency directories and files
+/vendor/
+Gopkg.lock
+Gopkg.toml
+
+# IDE/editor specific files
+.vscode/
+.idea/
+
+# Operating system specific files
+.DS_Store
+Thumbs.db
+
+# Git files
+*.git*
+.gitignore
+.gitattributes
+
+# Docker-related files
+Dockerfile*
+docker-compose*
+
+# Build output
+/build/
+dist/
+
+# Other unnecessary files
+coverage/
+testdata/
+*.env*
