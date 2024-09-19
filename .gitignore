@@ -1,0 +1,48 @@
+# Binaries for programs and plugins
+*.exe
+*.dll
+*.so
+*.dylib
+*.bin
+*.out
+
+# Output directories
+bin/
+build/
+dist/
+
+# Temporary files created during development
+*.log
+*.tmp
+*.swp
+*.lock
+
+# Dependency directories and files
+/vendor/
+Gopkg.lock
+Gopkg.toml
+
+# Editor and IDE specific files
+.idea/
+.vscode/
+
+# Operating system specific files
+.DS_Store
+Thumbs.db
+
+# Go coverage files
+*.cover
+coverage.out
+
+# Test result files
+*.test
+testdata/
+
+# Environment variable files
+*.env*
+
+# Git specific files
+*.orig
+
+# GoLand specific files
+/.idea/
