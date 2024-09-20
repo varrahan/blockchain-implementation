@@ -6,7 +6,7 @@ import (
 
 	blockchain "blockchain-emulator/src/blockchain"
 	router "blockchain-emulator/src/router"
-	env_utils "blockchain-emulator/src/util"
+	env_utils "blockchain-emulator/src/utils"
 )
 
 var bc *blockchain.Blockchain
