@@ -5,23 +5,24 @@ import (
 )
 
 type Block struct {
-	Timestamp     int64
-	Data          []byte
-	PrevBlockHash []byte
-	Hash          []byte
-	Nonce         int
-	Difficulty    int
+	Index 		  	int64
+	Timestamp     	time.Time
+	Transactions 	[]*Transaction
+	PrevBlockHash 	[]byte
+	Hash         	[]byte
+	Nonce         	int
+	Difficulty    	int
 }
 
 // Creates a new block to add to blockchain
-func NewBlock(data string, prevHash []byte, difficulty int) *Block {
+func NewBlock(index int64, transactions []*Transaction, prevHash []byte, difficulty int) *Block {
 	// Create a new block
-	newBlock := &Block{time.Now().Unix(),
-		[]byte(data),
-		prevHash,
-		[]byte{},
-		0,
-		difficulty}
+	newBlock := &Block{
+		Index: 			index,
+		Timestamp: 		time.Now(),
+		Transactions: 	transactions,
+		PrevBlockHash:	prevHash,
+		Difficulty: 	difficulty}
 	// Create proof of work for new block
 	pow := NewProofOfWork(newBlock)
 	// Run proof of work to find and set the nonce and hash
@@ -33,5 +34,9 @@ func NewBlock(data string, prevHash []byte, difficulty int) *Block {
 
 // Creates a genesis block to begin blockchain; does not reference a previous block
 func GenesisBlock() *Block {
-	return NewBlock("Genesis Block, initial block in blockchain", []byte{}, InitialDifficulty)
+	return NewBlock(0, []*Transaction{}, []byte{}, InitialDifficulty)
+}
+
+func (b *Block) IsValid() bool {
+	return b.Hash != nil || b.Transactions != nil
 }
