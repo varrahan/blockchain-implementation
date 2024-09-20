@@ -3,24 +3,23 @@ package blockchain
 import (
 	"bytes"
 	"crypto/sha256"
-	"fmt"
 	"math/big"
 	"strconv"
 	"time"
+
+	utils "blockchain-emulator/src/utils"
 )
 
-var InitialDifficulty int = 24           // Set initial difficulty
-var TargetTimePerBlock time.Duration = 10 * time.Second // Time in seconds
-var AdjustmentInterval int = 2    // Number of blocks required to adjust; uses timestamp of block n-1 and block (n-1) - AdjustmentInterval block
+
+var InitialDifficulty int = utils.StringToInt(utils.EnvUtils()["INITIAL_DIFFICULTY"]) 	// Set initial difficulty
+var TargetTimePerBlock int = utils.StringToInt(utils.EnvUtils()["TARGET_TIME"])			// Time in seconds
+var AdjustmentInterval int = utils.StringToInt(utils.EnvUtils()["ADJUSTMENT_INTERVAL"])	// Number of blocks required to adjust; uses timestamp of block n-1 and block (n-1) - AdjustmentInterval block
 
 type ProofOfWork struct {
 	Block  *Block
 	Target *big.Int
 }
 
-func LoadEnv() {
-
-}
 
 func (bc *Blockchain) AdjustDifficulty() int {
 	blockCount := len(bc.Blocks)
@@ -32,8 +31,8 @@ func (bc *Blockchain) AdjustDifficulty() int {
 	lastBlock := bc.Blocks[blockCount-1]
 	adjustmentBlock := bc.Blocks[blockCount-AdjustmentInterval]
 	// Calculate the actual time taken to mine the last `AdjustmentInterval` blocks
-	actualTimeTaken := time.Duration(lastBlock.Timestamp - adjustmentBlock.Timestamp) * time.Second
-	expectedTime := time.Duration(AdjustmentInterval) * TargetTimePerBlock
+	actualTimeTaken := time.Duration(lastBlock.Timestamp.Unix() - adjustmentBlock.Timestamp.Unix()) * time.Second
+	expectedTime := time.Duration(AdjustmentInterval) * (time.Duration(TargetTimePerBlock) * time.Second)
 	currentDifficulty := lastBlock.Difficulty
 	if actualTimeTaken < expectedTime {
 		// Blocks were mined too quickly, increase difficulty
@@ -56,8 +55,8 @@ func NewProofOfWork(block *Block) *ProofOfWork {
 func (pow *ProofOfWork) PrepareData(nonce int) []byte {
 	data := bytes.Join([][]byte{
 		pow.Block.PrevBlockHash,
-		pow.Block.Data,
-		[]byte(strconv.FormatInt(pow.Block.Timestamp, 10)),
+		Convert(pow.Block.Transactions),
+		[]byte(strconv.FormatInt(pow.Block.Timestamp.Unix(), 10)),
 		[]byte(strconv.Itoa(nonce)),
 		[]byte(strconv.Itoa(pow.Block.Difficulty)),
 	}, []byte{})
@@ -82,16 +81,4 @@ func (pow *ProofOfWork) Run() (int, []byte) {
 		}
 	}
 	return nonce, hash[:]
-}
-
-func (bc *Blockchain) PrintBlockchain() {
-	for _, block := range bc.Blocks {
-		fmt.Printf("Prev. hash: %x\n", block.PrevBlockHash)
-		fmt.Printf("Timestamp: %s\n", time.Unix(block.Timestamp, 0).Format(time.RFC3339))
-		fmt.Printf("Data: %s\n", block.Data)
-		fmt.Printf("Hash: %x\n", block.Hash)
-		fmt.Printf("Nonce: %d\n", block.Nonce)
-		fmt.Printf("Difficulty: %d\n", block.Difficulty)
-		fmt.Println()
-	}
 }
