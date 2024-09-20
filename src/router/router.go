@@ -18,7 +18,9 @@ func CreateRouter() *mux.Router {
 
 	// Set up multiplexer router
 	mux := mux.NewRouter()
-	mux.HandleFunc("/addblock", ctx.PostHandler).Methods("POST")
-	mux.HandleFunc("/getblocks", ctx.GetHandler).Methods("GET")
+	mux.HandleFunc("/mine", ctx.Mine_Post_handler).Methods("POST")
+	mux.HandleFunc("/transaction", ctx.Balance_Get_Handler).Methods("POST")
+	mux.HandleFunc("/balance", ctx.Balance_Get_Handler).Methods("GET")
+	mux.HandleFunc("/getblocks", ctx.GetBlocks_Get_Handler).Methods("GET")
 	return mux
 }
