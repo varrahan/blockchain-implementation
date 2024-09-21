@@ -10,16 +10,14 @@ import (
 	utils "blockchain-emulator/src/utils"
 )
 
-
-var InitialDifficulty int = utils.StringToInt(utils.EnvUtils()["INITIAL_DIFFICULTY"]) 	// Set initial difficulty
-var TargetTimePerBlock int = utils.StringToInt(utils.EnvUtils()["TARGET_TIME"])			// Time in seconds
-var AdjustmentInterval int = utils.StringToInt(utils.EnvUtils()["ADJUSTMENT_INTERVAL"])	// Number of blocks required to adjust; uses timestamp of block n-1 and block (n-1) - AdjustmentInterval block
+var InitialDifficulty int = utils.StringToInt(utils.EnvUtils()["INITIAL_DIFFICULTY"])   // Set initial difficulty
+var TargetTimePerBlock int = utils.StringToInt(utils.EnvUtils()["TARGET_TIME"])         // Time in seconds
+var AdjustmentInterval int = utils.StringToInt(utils.EnvUtils()["ADJUSTMENT_INTERVAL"]) // Number of blocks required to adjust; uses timestamp of block n-1 and block (n-1) - AdjustmentInterval block
 
 type ProofOfWork struct {
 	Block  *Block
 	Target *big.Int
 }
-
 
 func (bc *Blockchain) AdjustDifficulty() int {
 	blockCount := len(bc.Blocks)
@@ -31,7 +29,7 @@ func (bc *Blockchain) AdjustDifficulty() int {
 	lastBlock := bc.Blocks[blockCount-1]
 	adjustmentBlock := bc.Blocks[blockCount-AdjustmentInterval]
 	// Calculate the actual time taken to mine the last `AdjustmentInterval` blocks
-	actualTimeTaken := time.Duration(lastBlock.Timestamp.Unix() - adjustmentBlock.Timestamp.Unix()) * time.Second
+	actualTimeTaken := time.Duration(lastBlock.Timestamp.Unix()-adjustmentBlock.Timestamp.Unix()) * time.Second
 	expectedTime := time.Duration(AdjustmentInterval) * (time.Duration(TargetTimePerBlock) * time.Second)
 	currentDifficulty := lastBlock.Difficulty
 	if actualTimeTaken < expectedTime {
