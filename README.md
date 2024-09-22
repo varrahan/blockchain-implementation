@@ -49,7 +49,7 @@ docker compose up
 This project uses the following external dependency:
 
 - `github.com/gorilla/mux` for HTTP request routing
-- `github.com/joho/godotenv` for dotenv file varaible extraction
+- `github.com/joho/godotenv` to grab variables from dotenv file
 
 ## API Usage
 
@@ -66,7 +66,7 @@ Here's a brief overview of how to use the API:
    POST /maketransaction
    ```
    Send a POST request with the transaction details in the request body. The request body should be a JSON object with the following structure:
-   ```json
+   ```yaml
    {
      "From": "string",
      "To": "string",
