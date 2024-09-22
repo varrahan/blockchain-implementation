@@ -18,6 +18,6 @@ func main() {
 	mux := router.CreateRouter()
 	http.Handle("/", mux)
 	fmt.Printf("Server has started on port %s for local build\n", local_port)
-	fmt.Printf("Server is accessable on port %s for docker build", docker_port)
+	fmt.Printf("Server is accessible on port %s for docker build", docker_port)
 	http.ListenAndServe(":"+local_port, mux)
 }
