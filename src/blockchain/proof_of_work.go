@@ -5,7 +5,6 @@ import (
 	"crypto/sha256"
 	"math/big"
 	"strconv"
-	"time"
 
 	utils "blockchain-emulator/src/utils"
 )
@@ -27,19 +26,26 @@ func (bc *Blockchain) AdjustDifficulty() int {
 	}
 	// Get the last block and the block from AdjustmentInterval blocks ago
 	lastBlock := bc.Blocks[blockCount-1]
+	currentDifficulty := lastBlock.Difficulty
 	adjustmentBlock := bc.Blocks[blockCount-AdjustmentInterval]
 	// Calculate the actual time taken to mine the last `AdjustmentInterval` blocks
-	actualTimeTaken := time.Duration(lastBlock.Timestamp.Unix()-adjustmentBlock.Timestamp.Unix()) * time.Second
-	expectedTime := time.Duration(AdjustmentInterval) * (time.Duration(TargetTimePerBlock) * time.Second)
-	currentDifficulty := lastBlock.Difficulty
-	if actualTimeTaken < expectedTime {
+	actualTimeTaken := lastBlock.Timestamp.Unix() - adjustmentBlock.Timestamp.Unix()
+	expectedTime := AdjustmentInterval * TargetTimePerBlock
+	// Calculate adjustment factor and new difficulty to use for block
+	adjustmentFactor := float64(expectedTime) / float64(actualTimeTaken)
+	newDifficulty := int(float64(currentDifficulty) * adjustmentFactor)
+	if newDifficulty > currentDifficulty {
 		// Blocks were mined too quickly, increase difficulty
-		currentDifficulty++
-	} else if actualTimeTaken > expectedTime {
+		newDifficulty = currentDifficulty + 1
+	} else if newDifficulty < currentDifficulty {
 		// Blocks were mined too slowly, decrease difficulty
-		currentDifficulty--
+		newDifficulty = currentDifficulty - 1
 	}
-	return currentDifficulty
+	// Ensure new difficulty is never less than minimum
+	if newDifficulty < 1 {
+		return InitialDifficulty
+	}
+	return newDifficulty
 }
 
 // Initialize new proof of work with target for new block
