@@ -6,5 +6,6 @@ import (
 )
 
 func (ctx *HandlerContext) GetBlocks_Get_Handler(w http.ResponseWriter, r *http.Request) {
-    json.NewEncoder(w).Encode(ctx.Blockchain.Blocks)
+	// Return all blocks in the blockchain
+	json.NewEncoder(w).Encode(ctx.Blockchain.Blocks)
 }

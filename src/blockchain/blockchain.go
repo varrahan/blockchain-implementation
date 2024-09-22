@@ -6,7 +6,6 @@ import (
 	utils "blockchain-emulator/src/utils"
 )
 
-
 type Blockchain struct {
 	Blocks              []*Block
 	PendingTransactions *TransactionPool
@@ -14,13 +13,12 @@ type Blockchain struct {
 	Mutex               sync.Mutex
 }
 
-
 // Intitialize blockchain with genesis block
 func NewBlockchain() *Blockchain {
-	return &Blockchain {
-	Blocks: []*Block{GenesisBlock()},
-	PendingTransactions: NewTransactionPool(),
-	Reward: utils.StringToFloat(utils.EnvUtils()["REWARD"]),
+	return &Blockchain{
+		Blocks:              []*Block{GenesisBlock()},
+		PendingTransactions: NewTransactionPool(),
+		Reward:              utils.StringToFloat(utils.EnvUtils()["REWARD"]),
 	}
 }
 

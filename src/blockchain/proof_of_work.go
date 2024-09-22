@@ -5,21 +5,18 @@ import (
 	"crypto/sha256"
 	"math/big"
 	"strconv"
-	"time"
 
 	utils "blockchain-emulator/src/utils"
 )
 
-
-var InitialDifficulty int = utils.StringToInt(utils.EnvUtils()["INITIAL_DIFFICULTY"]) 	// Set initial difficulty
-var TargetTimePerBlock int = utils.StringToInt(utils.EnvUtils()["TARGET_TIME"])			// Time in seconds
-var AdjustmentInterval int = utils.StringToInt(utils.EnvUtils()["ADJUSTMENT_INTERVAL"])	// Number of blocks required to adjust; uses timestamp of block n-1 and block (n-1) - AdjustmentInterval block
+var InitialDifficulty int = utils.StringToInt(utils.EnvUtils()["INITIAL_DIFFICULTY"])   // Set initial difficulty
+var TargetTimePerBlock int = utils.StringToInt(utils.EnvUtils()["TARGET_TIME"])         // Time in seconds
+var AdjustmentInterval int = utils.StringToInt(utils.EnvUtils()["ADJUSTMENT_INTERVAL"]) // Number of blocks required to adjust; uses timestamp of block n-1 and block (n-1) - AdjustmentInterval block
 
 type ProofOfWork struct {
 	Block  *Block
 	Target *big.Int
 }
-
 
 func (bc *Blockchain) AdjustDifficulty() int {
 	blockCount := len(bc.Blocks)
@@ -29,19 +26,26 @@ func (bc *Blockchain) AdjustDifficulty() int {
 	}
 	// Get the last block and the block from AdjustmentInterval blocks ago
 	lastBlock := bc.Blocks[blockCount-1]
+	currentDifficulty := lastBlock.Difficulty
 	adjustmentBlock := bc.Blocks[blockCount-AdjustmentInterval]
 	// Calculate the actual time taken to mine the last `AdjustmentInterval` blocks
-	actualTimeTaken := time.Duration(lastBlock.Timestamp.Unix() - adjustmentBlock.Timestamp.Unix()) * time.Second
-	expectedTime := time.Duration(AdjustmentInterval) * (time.Duration(TargetTimePerBlock) * time.Second)
-	currentDifficulty := lastBlock.Difficulty
-	if actualTimeTaken < expectedTime {
+	actualTimeTaken := lastBlock.Timestamp.Unix() - adjustmentBlock.Timestamp.Unix()
+	expectedTime := AdjustmentInterval * TargetTimePerBlock
+	// Calculate adjustment factor and new difficulty to use for block
+	adjustmentFactor := float64(expectedTime) / float64(actualTimeTaken)
+	newDifficulty := int(float64(currentDifficulty) * adjustmentFactor)
+	if newDifficulty > currentDifficulty {
 		// Blocks were mined too quickly, increase difficulty
-		currentDifficulty++
-	} else if actualTimeTaken > expectedTime {
+		newDifficulty = currentDifficulty + 1
+	} else if newDifficulty < currentDifficulty {
 		// Blocks were mined too slowly, decrease difficulty
-		currentDifficulty--
+		newDifficulty = currentDifficulty - 1
 	}
-	return currentDifficulty
+	// Ensure new difficulty is never less than minimum
+	if newDifficulty < 1 {
+		return InitialDifficulty
+	}
+	return newDifficulty
 }
 
 // Initialize new proof of work with target for new block
