@@ -28,7 +28,7 @@ Here's an overview of the routes:
 3. Navigate to the project directory.
 4. Run `go mod tidy` to ensure all dependencies are installed.
 5. Build the project with `go build`.
-6. (Optional) To run doc you have docker desktop or install docker engine inside WSL2 and expose it for Windows access
+6. (Optional) To run as a docker container you have docker desktop or install docker engine inside WSL2 and expose it for Windows access
 
 ### Local running
 
