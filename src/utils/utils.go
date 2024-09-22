@@ -30,12 +30,13 @@ func EnvUtils() map[string]string {
 	godotenv.Load()
 	// create map to store variables
 	env_util := map[string]string{
+		"ADJUSTMENT_INTERVAL": os.Getenv("ADJUSTMENT_INTERVAL"),
 		"CONTAINER_PORT":      os.Getenv("CONTAINER_PORT"),
+		"INITIAL_DIFFICULTY":  os.Getenv("INITIAL_DIFFICULTY"),
 		"HOST_PORT":           os.Getenv("HOST_PORT"),
 		"REWARD":              os.Getenv("REWARD"),
-		"INITIAL_DIFFICULTY":  os.Getenv("INITIAL_DIFFICULTY"),
 		"TARGET_TIME":         os.Getenv("TARGET_TIME"),
-		"ADJUSTMENT_INTERVAL": os.Getenv("ADJUSTMENT_INTERVAL"),
+		"TIMER_OFFSET":        os.Getenv("TIMER_OFFSET"),
 	}
 	return env_util
 }
