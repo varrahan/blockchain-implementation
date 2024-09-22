@@ -49,7 +49,7 @@ docker compose up
 This project uses the following external dependency:
 
 - `github.com/gorilla/mux` for HTTP request routing
-- `github.com/joho/godotenv` for dotenv file variable extraction
+- `github.com/joho/godotenv` to grab variables from dotenv file
 
 ## API Usage
 
