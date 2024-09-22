@@ -1,69 +1,90 @@
-# Custom Blockchain with Adjustable Difficulty and Multiplexer Webserver
+# Blockchain Emulator
 
-This project implements a custom blockchain from scratch with adjustable mining difficulty and includes a multiplexer webserver for interacting with the blockchain.
+This project is a blockchain emulator that provides a set of HTTP endpoints for interacting with a simulated blockchain.
 
-## Features
+## Routes
 
-- Custom blockchain implementation
-- Adjustable mining difficulty
-- Multiplexer webserver for blockchain interaction
-- Proof-of-Work consensus mechanism
-- Transaction management
-- Block validation
+The router for this application is created in the `CreateRouter` function, which sets up the following components:
 
-## Getting Started
+1. A new blockchain instance
+2. A handler context containing the blockchain
+3. Various routes for interacting with the blockchain
 
-### Prerequisites
+Here's an overview of the routes:
 
-- [List any prerequisites or dependencies here]
+### Available Routes
 
-### Installation
+1. **POST /mineblock/{address}** - Mine a new block and assign the reward to the specified address
+2. **POST /maketransaction** - Submit a new transaction to the blockchain
+3. **GET /getbalance/{address}** - Retrieve the balance of a specific address
+4. **GET /getblocks** - Retrieve all blocks in the blockchain
 
-1. Clone the repository:
-   ```
-   git clone https://github.com/varrahan/blockchain-implementation.git
-   cd blockchain-implementation
-   ```
+## Setup and Running
 
-2. Install dependencies:
-   ```
-   [Command to install dependencies, e.g., pip install -r requirements.txt]
-   ```
+### Setup
 
-## Usage
+1. Ensure you have Go installed on your system.
+2. Clone this repository.
+3. Navigate to the project directory.
+4. Run `go mod tidy` to ensure all dependencies are installed.
+5. Build the project with `go build`.
+6. (Optional) To run doc you have docker desktop or install docker engine inside WSL2 and expose it for Windows access
 
-### Starting the Blockchain Node
+### Local running
 
-```
-[Command to start the blockchain node]
-```
-
-### Starting the Multiplexer Webserver
-
-```
-[Command to start the webserver]
+To run service locally:
+```bash
+go run main.go
 ```
 
-### Interacting with the Blockchain
+To run service on docker container:
+```bash
+docker build -t [image_name] .
 
-Describe how to interact with the blockchain through the webserver, including available endpoints and example requests.
+docker compose up
+```
 
-## Configuration
+## Dependencies
 
-Explain how to configure the blockchain, including how to adjust the mining difficulty.
+This project uses the following external dependency:
 
-## Architecture
+- `github.com/gorilla/mux` for HTTP request routing
+- `github.com/joho/godotenv` for dotenv file varaible extraction
 
-Provide a brief overview of the project's architecture, including how the blockchain and webserver components interact.
+## API Usage
 
-## Contributing
+Here's a brief overview of how to use the API:
 
-Instructions for how to contribute to the project.
+1. **Mine a Block**
+   ```
+   POST /mineblock/{address}
+   ```
+   Replace `{address}` with the address that should receive the mining reward.
 
-## License
+2. **Make a Transaction**
+   ```
+   POST /maketransaction
+   ```
+   Send a POST request with the transaction details in the request body. The request body should be a JSON object with the following structure:
+   ```json
+   {
+     "From": "string",
+     "To": "string",
+     "Amount": float,
+   }
+   ```
+   - `From`: The address of the sender
+   - `To`: The address of the recipient
+   - `Amount`: The amount to transfer (as a floating-point number)
 
-[Specify the license for your project]
+3. **Get Balance**
+   ```
+   GET /getbalance/{address}
+   ```
+   Replace `{address}` with the address whose balance you want to check.
 
-## Acknowledgments
-
-[Any acknowledgments or credits]
+4. **Get All Blocks**
+   ```
+   GET /getblocks
+   ```
+   This will return all blocks in the blockchain.
