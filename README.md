@@ -1,6 +1,6 @@
-# Blockchain Emulator
+# Blockchain Backend Implemetation
 
-This project is a blockchain emulator that provides a set of HTTP endpoints for interacting with a simulated blockchain.
+This project is a GO implemetation for a blockchain backend service that provides a set of HTTP endpoints for interacting with a simulated blockchain to make transactions and mine on a blockchain instance.
 
 ## Routes
 
