@@ -3,29 +3,17 @@ package handler
 import (
 	"net/http"
 	"time"
-
-	mux "github.com/gorilla/mux"
 )
 
 func (ctx *HandlerContext) MineBlock_Post_handler(w http.ResponseWriter, r *http.Request) {
-
-	// Get address from query parameters
-	vars := mux.Vars(r)
-	minerAddress := vars["address"]
-	// If address is blank raise error
-	if minerAddress == "" {
-		http.Error(w, "Miner address is required", http.StatusBadRequest)
-		return
-	}
 	// Send response to indicate mining has started
 	sendSSE(w, map[string]string{
-		"status":  "Mining started",
-		"address": minerAddress,
+		"status": "Mining started",
 	})
 	// Create channel and go function to process mining on seperate thread
 	result := make(chan MiningResult)
 	go func() {
-		ctx.Blockchain.MineBlock(minerAddress)
+		ctx.Blockchain.MineBlock()
 		newBlock := ctx.Blockchain.Blocks[len(ctx.Blockchain.Blocks)-1]
 		result <- MiningResult{
 			Success: true,

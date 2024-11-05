@@ -34,7 +34,6 @@ func EnvUtils() map[string]string {
 		"CONTAINER_PORT":      os.Getenv("CONTAINER_PORT"),
 		"INITIAL_DIFFICULTY":  os.Getenv("INITIAL_DIFFICULTY"),
 		"HOST_PORT":           os.Getenv("HOST_PORT"),
-		"REWARD":              os.Getenv("REWARD"),
 		"TARGET_TIME":         os.Getenv("TARGET_TIME"),
 		"TIMER_OFFSET":        os.Getenv("TIMER_OFFSET"),
 	}

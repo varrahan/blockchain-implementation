@@ -2,14 +2,11 @@ package blockchain
 
 import (
 	"sync"
-
-	utils "blockchain-emulator/src/utils"
 )
 
 type Blockchain struct {
 	Blocks              []*Block
 	PendingTransactions *TransactionPool
-	Reward              float64
 	Mutex               sync.Mutex
 }
 
@@ -18,10 +15,10 @@ func NewBlockchain() *Blockchain {
 	return &Blockchain{
 		Blocks:              []*Block{GenesisBlock()},
 		PendingTransactions: NewTransactionPool(),
-		Reward:              utils.StringToFloat(utils.EnvUtils()["REWARD"]),
 	}
 }
 
+// Add transaction to pool of transactions
 func (bc *Blockchain) AddTransaction(transaction *Transaction) {
 	if transaction.IsValid() {
 		bc.PendingTransactions.AddTransaction(transaction)
@@ -29,16 +26,13 @@ func (bc *Blockchain) AddTransaction(transaction *Transaction) {
 }
 
 // Mine new block
-func (bc *Blockchain) MineBlock(minerAddress string) {
+func (bc *Blockchain) MineBlock() {
 	bc.Mutex.Lock()
 	defer bc.Mutex.Unlock()
 	// Initialize data added to block
 	prevBlock := bc.Blocks[len(bc.Blocks)-1]
 	difficulty := bc.AdjustDifficulty()
 	index := prevBlock.Index + 1
-	// Create transaction
-	transaction := NewTransaction("Blockchain", minerAddress, bc.Reward)
-	bc.PendingTransactions.AddTransaction(transaction)
 	// Create block and add to blockchain if valid
 	newBlock := NewBlock(index, bc.PendingTransactions.Transactions, prevBlock.Hash, difficulty)
 	if newBlock.IsValid() {
