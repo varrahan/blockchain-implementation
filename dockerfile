@@ -25,7 +25,7 @@ COPY --chown=blockuser:blockchaingroup . .
 # Build the application
 RUN CGO_ENABLED=0 GOOS=linux go build -installsuffix cgo -o main ./main.go
 
-# Runtime stage
+# Runtime stage base image
 FROM alpine:3.19
 
 # Add packages
