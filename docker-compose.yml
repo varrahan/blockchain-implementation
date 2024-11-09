@@ -6,3 +6,6 @@ services:
       - "${HOST_PORT}:${CONTAINER_PORT}"
     env_file:
       - .env
+    volumes:
+      - ".${SECURITY_CERT_PATH}:${SECURITY_CERT_PATH}"
+      - ".${SECURITY_KEY_PATH}:${SECURITY_KEY_PATH}"

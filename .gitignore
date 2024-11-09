@@ -6,6 +6,11 @@
 *.bin
 *.out
 
+# Security certificates
+*.key
+*.crt
+*.pem
+
 # Output directories
 bin/
 build/

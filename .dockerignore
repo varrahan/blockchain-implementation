@@ -6,6 +6,11 @@
 *.so
 *.dylib
 
+# Security certificates
+*.crt
+*.key
+*.pem
+
 # Temporary files
 *.log
 *.tmp
