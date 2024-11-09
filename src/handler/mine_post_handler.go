@@ -26,7 +26,7 @@ func (ctx *HandlerContext) Mine_Block_Post_Handler(w http.ResponseWriter, r *htt
 			Block:   newBlock,
 		}
 	}()
-	var result any
+	var result MiningResult
 	select {
 	// Case when mining is completed, send result response to client
 	case miningResult := <-miningChannel:
@@ -37,13 +37,21 @@ func (ctx *HandlerContext) Mine_Block_Post_Handler(w http.ResponseWriter, r *htt
 		err := "Mining timed out"
 		log.Printf("%s", err)
 		w.WriteHeader(http.StatusGatewayTimeout)
-		result = map[string]string{"Error Message": err}
+		result = MiningResult{
+			Success: false,
+			Message: err,
+			Block:   nil,
+		}
 	// Case when client disconnects or request is cancelled, send client disconnect error response
 	case <-r.Context().Done():
 		err := "Client disconnect"
 		log.Printf("%s", err)
 		w.WriteHeader(499)
-		result = map[string]string{"Error Message": err}
+		result = MiningResult{
+			Success: false,
+			Message: err,
+			Block:   nil,
+		}
 	}
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(result)
