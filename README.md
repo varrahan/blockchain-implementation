@@ -14,7 +14,7 @@ Here's an overview of the routes:
 
 ### Available Routes
 
-1. **POST /mineblock/{address}** - Mine a new block and assign the reward to the specified address
+1. **POST /mineblock** - Mine a new block and assign the reward to the specified address
 2. **POST /maketransaction** - Submit a new transaction to the blockchain
 3. **GET /getbalance/{address}** - Retrieve the balance of a specific address
 4. **GET /getblocks** - Retrieve all blocks in the blockchain
@@ -57,9 +57,9 @@ Here's a brief overview of how to use the API:
 
 1. **Mine a Block**
    ```
-   POST /mineblock/{address}
+   POST /mineblock
    ```
-   Replace `{address}` with the address that should receive the mining reward.
+   Send a POST request which will add all transactions in the transaction pool into a new block and mine the block onto the blockchain
 
 2. **Make a Transaction**
    ```
@@ -81,10 +81,10 @@ Here's a brief overview of how to use the API:
    ```
    GET /getbalance/{address}
    ```
-   Replace `{address}` with the address whose balance you want to check.
+   Replace `{address}` with the address whose balance you want to check. This route gives the user the balance of the selected user
 
 4. **Get All Blocks**
    ```
    GET /getblocks
    ```
-   This will return all blocks in the blockchain.
+   Send a GET request which will return all blocks in the blockchain.
