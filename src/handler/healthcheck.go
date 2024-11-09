@@ -26,6 +26,6 @@ func (ctx *HandlerContext) Health_Check(w http.ResponseWriter, r *http.Request) 
 			return
 		}
 	}
-
+	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string][]bool{"data": health_result[:]})
 }
