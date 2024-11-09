@@ -9,9 +9,9 @@ import (
 	utils "blockchain-emulator/src/utils"
 )
 
-var InitialDifficulty int = utils.StringToInt(utils.EnvUtils()["INITIAL_DIFFICULTY"])   // Set initial difficulty
-var TargetTimePerBlock int = utils.StringToInt(utils.EnvUtils()["TARGET_TIME"])         // Time in seconds
-var AdjustmentInterval int = utils.StringToInt(utils.EnvUtils()["ADJUSTMENT_INTERVAL"]) // Number of blocks required to adjust; uses timestamp of block n-1 and block (n-1) - AdjustmentInterval block
+var InitialDifficulty int = utils.StringToInt(utils.EnvUtils["INITIAL_DIFFICULTY"])   // Set initial difficulty
+var TargetTimePerBlock int = utils.StringToInt(utils.EnvUtils["TARGET_TIME"])         // Time in seconds
+var AdjustmentInterval int = utils.StringToInt(utils.EnvUtils["ADJUSTMENT_INTERVAL"]) // Number of blocks required to adjust; uses timestamp of block n-1 and block (n-1) - AdjustmentInterval block
 
 type ProofOfWork struct {
 	Block  *Block
