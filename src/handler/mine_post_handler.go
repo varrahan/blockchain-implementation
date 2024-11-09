@@ -1,34 +1,50 @@
 package handler
 
 import (
+	"encoding/json"
+	"log"
 	"net/http"
 	"time"
 )
 
-func (ctx *HandlerContext) MineBlock_Post_handler(w http.ResponseWriter, r *http.Request) {
-	// Send response to indicate mining has started
-	sendSSE(w, map[string]string{
-		"status": "Mining started",
-	})
+func (ctx *HandlerContext) Mine_Block_Post_Handler(w http.ResponseWriter, r *http.Request) {
+	log.Printf("Mine block post request received")
+	if len(ctx.Blockchain.PendingTransactions.Transactions) == 0 {
+		err := "No transactions are pending to add to new block. Please ensure that transaction pool is not empty before mining a block onto the blockchain"
+		log.Printf("%s", err)
+		http.Error(w, err, http.StatusBadRequest)
+		return
+	}
 	// Create channel and go function to process mining on seperate thread
-	result := make(chan MiningResult)
+	miningChannel := make(chan MiningResult)
 	go func() {
 		ctx.Blockchain.MineBlock()
 		newBlock := ctx.Blockchain.Blocks[len(ctx.Blockchain.Blocks)-1]
-		result <- MiningResult{
+		miningChannel <- MiningResult{
 			Success: true,
+			Message: "Block has been mined onto the blockchain",
 			Block:   newBlock,
 		}
 	}()
+	var result any
 	select {
 	// Case when mining is completed, send result response to client
-	case miningResult := <-result:
-		sendSSE(w, miningResult)
+	case miningResult := <-miningChannel:
+		w.WriteHeader(http.StatusAccepted)
+		result = miningResult
 	// Case when mining takes too long, send time out response to client
 	case <-time.After(miningTimeOffset + miningTime):
-		sendSSE(w, map[string]string{"status": "Mining timed out"})
-	// Case when client disconnects or request is cancelled, stop function
+		err := "Mining timed out"
+		log.Printf("%s", err)
+		w.WriteHeader(http.StatusGatewayTimeout)
+		result = map[string]string{"Error Message": err}
+	// Case when client disconnects or request is cancelled, send client disconnect error response
 	case <-r.Context().Done():
-		return
+		err := "Client disconnect"
+		log.Printf("%s", err)
+		w.WriteHeader(499)
+		result = map[string]string{"Error Message": err}
 	}
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(result)
 }
