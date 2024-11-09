@@ -1,6 +1,6 @@
 # Blockchain Backend Implemetation
 
-This project is a GO implemetation for a blockchain backend service that provides a set of HTTP endpoints for interacting with a simulated blockchain to make transactions and mine on a blockchain instance.
+This project is a GO implemetation for a blockchain backend service that provides a set of HTTPS endpoints for interacting with a simulated blockchain to make transactions and mine on a blockchain instance.
 
 ## Routes
 
@@ -27,10 +27,18 @@ Here's an overview of the routes:
 2. Clone this repository.
 3. Navigate to the project directory.
 4. Run `go mod tidy` to ensure all dependencies are installed.
-5. Build the project with `go build`.
-6. (Optional) To run as a docker container you have docker desktop or install docker engine inside WSL2 and expose it for Windows access
+5. Ensure that security key and certificate are have been created to run HTTPS
+6. Build the project with `go build`.
+7. (Optional) To run as a docker container you have docker desktop or install docker-engine inside WSL2 and expose it for Windows access
 
-### Local running
+### Obtaining Security Certificate and Key
+To obtain both certificate and key, use this command to create both items after cd to the desired directory
+```bash
+openssl req -x509 -newkey rsa:4096 -keyout [name].key -out [name].pem -days 365 -nodes
+```
+Replace name with whatever filename you choose
+
+### Local Running
 
 To run service locally:
 ```bash
