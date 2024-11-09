@@ -32,5 +32,6 @@ func (ctx *HandlerContext) Add_Transaction_Post_Handler(w http.ResponseWriter, r
 	// Create a new transaction
 	transaction := bc.NewTransaction(transactionData.From, transactionData.To, transactionData.Amount)
 	ctx.Blockchain.AddTransaction(transaction)
+	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(transaction)
 }
